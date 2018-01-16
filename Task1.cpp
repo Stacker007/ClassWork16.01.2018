@@ -1,6 +1,6 @@
 /*
-1. *Ввести массив целых чисел. Найти количество нулей в массиве и сумму
-элементов, стоящих на нечетных местах.
+1. Напишите программу сортировки одномерного массива целых чисел по
+невозрастанию (убыванию) методом выбора максимального элемента
 */
 
 #include <iostream>
@@ -20,18 +20,22 @@ void main() {
 	srand(time(0));
 	int ourArr[SIZE];
 	int countOfNull = 0;
-	int sum = 0;
+	int k = 0;
 	for (int i = 0; i < SIZE; i++)
 		ourArr[i] = rand() % 22 - 10; //Инициализируем числами от -10 до 10
 	cout << "Исходный массив:\n";
 	printOurArr(ourArr); // Вызов функции вывода массива
-	cout << endl;
-	for (int i = 0; i < SIZE; i++) {
-		if (ourArr[i] == 0) countOfNull++;
-		if (i % 2 == 0) sum += ourArr[i]; //Нечетная позиция с точки зрения пользователя
+	for (int k = 0; k < SIZE -1; k++) // к - левая граница подмассива
+	{
+		int imin = k; 
+		for (int i = k + 1; i < SIZE; i++) 
+			if (ourArr[i]>ourArr[imin]) imin = i; //Находим максимальный элемент в части массива от k до SIZE 
+		int tmp = ourArr[k];
+		ourArr[k] = ourArr[imin];
+		ourArr[imin] = tmp;
 	}
-	cout << "Количество нулей " << countOfNull << endl;
-	cout << "Сумма чисел на нечетных позициях " << sum << endl;
-
+	cout << endl;
+	cout << "Итоговый массив:\n";
+	printOurArr(ourArr); // Вызов функции вывода массива
 	system("pause");
 }
