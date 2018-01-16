@@ -18,9 +18,7 @@ void main() {
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
 	int ourArr[SIZE];
-	int countOfNull = 0;
 	int k = SIZE-1;
-	bool flag = true;
 	for (int i = 0; i < SIZE; i++)
 		ourArr[i] = rand() % 202 - 100; //Инициализируем массив
 	cout << "Исходный массив:\n";
