@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <ctime>
-#define SIZE 8
+#define SIZE 20
 
 using namespace std;
 // ФУНКЦИЯ ДЛЯ ВЫВОДА МАССИВА :
@@ -22,7 +22,7 @@ void main() {
 	int countOfNull = 0;
 	int k = 0;
 	for (int i = 0; i < SIZE; i++)
-		ourArr[i] = rand() % 22 - 10; //Инициализируем числами от -10 до 10
+		ourArr[i] = rand() % 202 - 100; //Инициализируем массив
 	cout << "Исходный массив:\n";
 	printOurArr(ourArr); // Вызов функции вывода массива
 	for (int k = 0; k < SIZE -1; k++) // к - левая граница подмассива
