@@ -29,6 +29,7 @@ void main() {
 	printOurArr(ourArr); // Вызов функции вывода массива
 	while (k > 0 && flag)// к - левая граница подмассива
 	{
+		int endI = -1;
 		flag = false;
 		for (int i = 0; i < k; i++) 
 			if (ourArr[i] > ourArr[i + 1]) {
@@ -37,13 +38,11 @@ void main() {
 				ourArr[i] = ourArr[i+1];
 				ourArr[i+1] = tmp;
 				flag = true;
+				endI = i;
 			}
-		k--;
-		
-	}
-	
+		k=endI;		
+	}	
 	cout << "Итоговый массив:\n";
 	printOurArr(ourArr); // Вызов функции вывода массива
-
 	system("pause");
 }
