@@ -1,82 +1,112 @@
-/*
-5. Дан массив случайных чисел от 0 до 20. Пользователь вводит число. Необходимо
-найти самую левую позицию этого числа в массиве. Отсортировать элементы
-справа от найденного по возрастанию, а слева – по убыванию.
-*/
+/*1. Дан отсортированный по возрастанию массив целых чисел, элементы
+которого не повторяются. Запросить у пользователя значение элемента. Если такой
+элемент имеется в массиве, то удалить его (сдвинуть влево оставшуюся часть
+массива). Если такого элемента нет, то вывести сообщение. Использовать указатели
+для продвижения по массиву.*/
 
 #include <iostream>
 #include <ctime>
-#define SIZE 10
-
+#define SIZE 20
 using namespace std;
-// ФУНКЦИЯ ДЛЯ ВЫВОДА МАССИВА :
-void printOurArr(int a[], int column){
-	for (int i = 0; i < column; i++)
-		cout << a[i] << " ";
-	cout << endl;
-}
+void randArr(int a[], int sizeArr);
+void printArr(int a[], int sizeArr);
+void sortArr(int a[], int sizeArr);
+int unRepeat(int a[], int sizeArr);
+void aloneShiftArr(int a[], int sizeArr, int *alone);
 
-int main() {
+void main()
+{
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
-	int ourArr[SIZE];
-	int choice;
-	int indexOfChoice;
-	bool flag = true;
-	for (int i = 0; i < SIZE; i++)
-		ourArr[i] = rand() % 21; //Инициализируем массив
-	cout << "Исходный массив:\n";
-	printOurArr(ourArr,SIZE); // Вызов функции вывода массива
-	do {
-		flag = true;
-		cout << "Выберите число из массива ";
-		cin >> choice;
-		int i;
-		for (i = 0; i < SIZE; i++)
-			if (ourArr[i] == choice) break;
-		indexOfChoice = i;
-		if (i == SIZE) {
-			cout << "Такого числа нет в массиве!!!\n";
-			flag = false;
-		}
-	} while (!flag); // Ввод числа с проверкой
-
-	int k = indexOfChoice-1; //сортировка до слева от числа (по убыванию)
-	while (k > 0 && flag) // к - левая граница подмассива (
+	int arrA[SIZE];
+	int realSize = SIZE;
+	int num;
+	//Генерация отсортированного по возрастанию массива целых чисел, элементы
+	//которого не повторяются  А[n]:
+	
 	{
-	int endI = -1;
-	flag = false;
-	for (int i = 0; i < k; i++)
-	if (ourArr[i] < ourArr[i + 1]) {
-	//Находим максимальный элемент в части массива от k до SIZE
-	int tmp = ourArr[i];
-	ourArr[i] = ourArr[i + 1];
-	ourArr[i + 1] = tmp;
-	flag = true;
-	endI = i;
+		randArr(arrA, SIZE);
+		sortArr(arrA, SIZE);
+		realSize = unRepeat(arrA, SIZE);
+		cout << "Сортированный массив А[n]:" << endl;
+		printArr(arrA, realSize);
 	}
-	k = endI;
-	}
-	flag = true;
-	k = SIZE-1; //сортировка справа от числа (по возрастанию)
-	while (k > indexOfChoice+1 && flag) // к - левая граница подмассива (
+	bool flag = false;
+	int *ptrA;
+	
+	do {
+		ptrA = arrA;
+		cout << "Введите значение числа, которое хотите удалить" << endl;
+		cin >> num;
+		
+		for (; ptrA< arrA+realSize; ptrA++)
+			if (*ptrA == num) {
+				flag = true;
+				break;
+			}
+		if (!flag) cout << "такого числа нет в массиве!" << endl;
+	} while (!flag);
+	aloneShiftArr(arrA, realSize, ptrA);
+	cout << "Получился массив:" << endl;
+	printArr(arrA, realSize - 1);
+	system("pause");
+	
+}
+
+
+void randArr(int a[], int sizeArr) {
+
+	int *ptr;
+	ptr = a;
+	for (int i = 0; i<sizeArr; i++, ptr++)
+		*ptr = rand() % 21 - 10;
+}
+void printArr(int a[], int sizeArr) {
+	int *ptr;
+	ptr = a;
+	for (int i = 0; i < sizeArr; i++, ptr++)
+		cout << *ptr << " ";
+	cout << endl;
+}
+void sortArr(int a[], int sizeArr) {
+	bool flag = true;
+	int k = sizeArr - 1;
+	while (k > 0 && flag)// к - левая граница подмассива
 	{
 		int endI = -1;
 		flag = false;
-		for (int i = indexOfChoice+1 ; i < k; i++)
-			if (ourArr[i] > ourArr[i + 1]) {
-				//Находим максимальный элемент в части массива от k до SIZE
-				int tmp = ourArr[i];
-				ourArr[i] = ourArr[i + 1];
-				ourArr[i + 1] = tmp;
+		for (int i = 0; i < k; i++)
+			if (a[i] > a[i + 1]) {
+				//Находим максимальный элемент в части массива от k до SIZE 
+				int tmp = a[i];
+				a[i] = a[i + 1];
+				a[i + 1] = tmp;
 				flag = true;
 				endI = i;
 			}
 		k = endI;
 	}
-	cout << "Итоговый массив:\n";
-	printOurArr(ourArr, SIZE); // Вызов функции вывода массива
-	
-	system("pause");
-	return 0;
+}
+int unRepeat(int a[], int sizeArr) {
+	int *ptr;
+	int nSize = sizeArr;
+	ptr = a;
+	for (int i = 0; i < sizeArr; i++, ptr++) {
+		if (*ptr == *(ptr + 1) && ptr < a + nSize - 1)
+		{
+			aloneShiftArr(a, nSize, ptr);
+			nSize--;
+			i--;
+			ptr--;
+		}
+	}
+
+	return nSize;
+}
+
+void aloneShiftArr(int a[], int sizeArr, int *alone) {
+	for (; alone < a + sizeArr-1; alone++)
+		*alone = *(alone + 1);
+	*alone = 0;
+
 }
